@@ -1,6 +1,18 @@
 /* jshint esversion:6 */
 
+utils = require('utils');
+
 var roleTower = {
+
+  _init: function(room) {
+    var myTowers = roleTower.towers(room);
+    if (myTowers.length > 0) {
+      for (var t in myTowers) {
+        var tower = myTowers[t];
+        roleTower.towerControl(tower);
+      }
+    }
+  },
 
   towers: function(room){
     return room.find(FIND_STRUCTURES, {
@@ -8,15 +20,6 @@ var roleTower = {
         return structure.structureType === STRUCTURE_TOWER;
       }
     });
-  },
-
-  _init: function(room) {
-    var myTowers = roleTower.towers(room);
-    if (myTowers.length > 0) {
-      for (var tower in myTowers) {
-        roleTower.towerControl(tower);
-      }
-    }
   },
 
   towerControl: function(tower) {

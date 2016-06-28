@@ -18,6 +18,7 @@ module.exports.loop = function() {
     spawner.controller();
   }
   //roleTower._init(myRoom);
+  utils.cLog(utils.towers());
 
   for (var cName in Game.creeps) {
     var creep = Game.creeps[cName];
