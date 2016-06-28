@@ -9,11 +9,10 @@ var roleHarvester = require('role.harvester'),
 
 module.exports.loop = function() {
 
+  var myRoom = Game.spawns.Spawn1.room;
+
   utils._gtcCount();
   utils.clearMem();
-  console.log(utils.GTC());
-
-  var myRoom = Game.spawns.Spawn1.room;
 
   if (Game.spawns.Spawn1.energy >= 200) {
     spawner.controller();
