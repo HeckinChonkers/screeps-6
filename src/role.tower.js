@@ -2,22 +2,24 @@
 
 var roleTower = {
 
-  _init: function() {
-    var towers = Game.spawns.Spawn1.room.find(FIND_STRUCTURES, {
+  towers: function(room){
+    return room.find(FIND_STRUCTURES, {
       filter: (structure) => {
         return structure.structureType === STRUCTURE_TOWER;
       }
     });
+  },
 
-    if (towers.length > 0) {
-      for (var tower in towers) {
+  _init: function(room) {
+    var myTowers = roleTower.towers(room);
+    if (myTowers.length > 0) {
+      for (var tower in myTowers) {
         roleTower.towerControl(tower);
       }
     }
   },
 
   towerControl: function(tower) {
-
     var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS),
       closestDamagedStructure = tower.pos.findClosestByRange(
         FIND_STRUCTURES, {

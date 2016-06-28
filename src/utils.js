@@ -26,7 +26,6 @@ var utils = {
     }
   },
 
-
   cFullCheck: function(creep) {
     if (creep.memory.fullCheck && creep.carry.energy === 0) {
       creep.memory.fullCheck = false;

@@ -17,8 +17,7 @@ module.exports.loop = function() {
   if (Game.spawns.Spawn1.energy >= 200) {
     spawner.controller();
   }
-
-  // roleTower._init();
+  roleTower._init(myRoom);
 
   for (var cName in Game.creeps) {
     var creep = Game.creeps[cName];
