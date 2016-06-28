@@ -20,7 +20,6 @@ module.exports.loop = function() {
 
   // roleTower._init();
 
-
   for (var cName in Game.creeps) {
     var creep = Game.creeps[cName];
 
