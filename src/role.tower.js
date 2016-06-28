@@ -11,7 +11,7 @@ var roleTower = {
 
     if (towers.length > 0) {
       for (var tower in towers) {
-        towerControl(tower);
+        roleTower.towerControl(tower);
       }
     }
   },
