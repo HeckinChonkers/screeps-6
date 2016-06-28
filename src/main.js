@@ -3,26 +3,12 @@
 var roleHarvester = require('role.harvester'),
   roleUpgrader = require('role.upgrader'),
   roleBuilder = require('role.builder'),
+  roleTower = require('role.tower'),
   spawner = require('spawner'),
   utils = require('utils');
 
 module.exports.loop = function() {
 
-  // var tower = Game.getObjectById('id943380');
-  // if (tower) {
-  //   var closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
-  //       filter: (structure) => structure.hits < structure.hitsMax
-  // })
-  //   ;
-  //   if (closestDamagedStructure) {
-  //     tower.repair(closestDamagedStructure);
-  //   }
-  //
-  //   var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
-  //   if (closestHostile) {
-  //     tower.attack(closestHostile);
-  //   }
-  // }
   utils._gtcCount();
   utils.clearMem();
   console.log(utils.GTC());
@@ -32,6 +18,8 @@ module.exports.loop = function() {
   if (Game.spawns.Spawn1.energy >= 200) {
     spawner.controller();
   }
+
+  roleTower._init();
 
 
   for (var cName in Game.creeps) {
