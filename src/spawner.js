@@ -34,6 +34,7 @@ var spawner = {
               filter: (structure) => structure.structureType == STRUCTURE_EXTENSION
       });
       return extensions.length;
+
     }
     function getName(cRole) {
       var d = new Date();

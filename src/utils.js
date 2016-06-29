@@ -16,7 +16,7 @@ var utils = {
     console.log(JSON.stringify(input));
   },
 
-  // tote Creeps aus dem Memory löschen
+  // tote Creeps aus dem Memory lÃ¶schen
   clearMem: function() {
     for (var name in Memory.creeps) {
       if (!Game.creeps[name]) {
@@ -35,7 +35,7 @@ var utils = {
     }
   },
 
-  // Energie-Ernte für unterschiedliche Rollen
+  // Energie-Ernte fÃ¼r unterschiedliche Rollen
   cHarvest: function(creep) {
     var target = creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE);
     if (creep.memory.role === 'upgrader' || creep.memory.role === 'builder') {
@@ -48,14 +48,14 @@ var utils = {
     }
   },
 
-  // Reparatur mit Prioritäten
+  // Reparatur mit PrioritÃ¤ten
   cRepair: function(creep) {
     var targets = creep.room.find(FIND_STRUCTURES, {
       filter: object => object.hits < object.hitsMax
     });
     targets.sort((a, b) => a.hits - b.hits);
 
-    // ToDo: Clusterfuck auflösen
+    // ToDo: Clusterfuck auflÃ¶sen
     var walls = creep.room.find(FIND_STRUCTURES, {
       filter: (structure) => {
         return structure.structureType === STRUCTURE_WALL;
@@ -75,7 +75,7 @@ var utils = {
       Math.round(c.hitsMax * 0.9));
     containers.sort((a, b) => a.hits - b.hits);
 
-    // ToDo: Clusterfuck auflösen
+    // ToDo: Clusterfuck auflÃ¶sen
     if (containers.length) {
       console.log('containersToRepair: ' + containers.length + ', ' +
         containers[0].hits + '|' + containers[0].hitsMax);
