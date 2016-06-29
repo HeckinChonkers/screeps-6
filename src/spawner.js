@@ -43,7 +43,7 @@ var spawner = {
     function bodyChooser(){
       var bodyType = Math.floor(spawner.eAvail/100)*100,
           bodyConf = conf.creepBodies.workers
-      if (bodyConf[bodyType]) {
+      if (Boolean(bodyConf[bodyType])) {
         return bodyConf[bodyType]
       } else { //letztes Element ausgeben
         return bodyConf[Object.keys(bodyConf)[Object.keys(bodyConf).length-1]];
