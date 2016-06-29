@@ -96,8 +96,8 @@ var utils = {
     } else {
       if (targets.length > 0) {
         var closestTopTgt = closest(targets.slice(1, 21));
-        if (creep.repair(targets[0]) == ERR_NOT_IN_RANGE) {
-          creep.moveTo(targets[0]);
+        if (creep.repair(closestTopTgt) == ERR_NOT_IN_RANGE) {
+          creep.moveTo(closestTopTgt);
         }
       }
     }
