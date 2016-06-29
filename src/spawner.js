@@ -41,18 +41,20 @@ var spawner = {
       return cRole + String(d.getTime()).substring(6);
     }
     function bodyChooser(){
-      return conf.creepBodies.workers[extCounter()];
+      var bodyType = Math.floor(spawner.eAvail/100)*100,
+          bodyConf = conf.creepBodies.workers
+      if (bodyConf[bodyType]) {
+        return bodyConf[bodyType]
+      } else { //letztes Element ausgeben
+        return bodyConf[Object.keys(bodyConf)[Object.keys(bodyConf).length-1]];
+      }
+      return conf.creepBodies.workers[bodyType];
     }
 
     for (var cRole in conf.workers) {
-      if (spawner.needCreeps(cRole)) {
-        if (mySpawn.canCreateCreep(bodyChooser()) === OK) {
+      if (spawner.needCreeps(cRole) && spawner.eAvail >= 200) {
           var newName = spawnCreep(cRole) ;
           console.log('Spawning new ' + cRole + ': ' + newName);
-        } else {
-          console.log('waiting for Energy to create ' + cRole);
-        }
-
       }
     }
 /*
