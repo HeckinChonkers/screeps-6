@@ -54,7 +54,7 @@ var utils = {
       return creep.pos.findClosestByPath(target);
     };
     var targets = creep.room.find(FIND_STRUCTURES, {
-      filter: object => object.hits < Math.round(object.hitsMax + 0.9)
+      filter: object => object.hits < Math.round(object.hitsMax * 0.9)
     });
     targets.sort((a, b) => a.hits - b.hits);
 
