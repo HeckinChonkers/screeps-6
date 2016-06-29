@@ -57,7 +57,6 @@ var utils = {
       filter: object => object.hits < object.hitsMax
     });
     targets.sort((a, b) => a.hits - b.hits);
-    utils.cLog(targets);
 
     // ToDo: Clusterfuck auflÃ¶sen
     var walls = creep.room.find(FIND_STRUCTURES, {
@@ -96,6 +95,7 @@ var utils = {
       }
     } else {
       if (targets.length > 0) {
+        var closestTopTgt = closest(targets.slice(1, 21));
         if (creep.repair(targets[0]) == ERR_NOT_IN_RANGE) {
           creep.moveTo(targets[0]);
         }
