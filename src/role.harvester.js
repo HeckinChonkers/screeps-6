@@ -22,16 +22,27 @@ var roleHarvester = {
     if (!creep.memory.fullCheck) {
       utils.cHarvest(creep);
     } else {
-      var targets = creep.room.find(FIND_STRUCTURES, {
+
+      var spawners = creep.room.find(FIND_STRUCTURES, {
         filter: (structure) => {
-          return (structure.structureType == STRUCTURE_STORAGE || 
-              structure.structureType == STRUCTURE_TOWER ||
-              structure.structureType == STRUCTURE_EXTENSION ||
+          return (structure.structureType == STRUCTURE_EXTENSION ||
               structure.structureType == STRUCTURE_SPAWN) &&
               structure.energy < structure.energyCapacity;
         }
       });
-      if (targets.length > 0) {
+      var targets = creep.room.find(FIND_STRUCTURES, {
+        filter: (structure) => {
+          return (structure.structureType == STRUCTURE_STORAGE ||
+              structure.structureType == STRUCTURE_TOWER) &&
+              structure.energy < structure.energyCapacity;
+        }
+      });
+      if (spawners.length > 0) {
+        var closestS = creep.pos.findClosestByPath(targets);
+        if (creep.transfer(closestS, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+          creep.moveTo(closestS);
+        }
+      } else if (targets.length > 0) {
         var closestT = creep.pos.findClosestByPath(targets);
         if (creep.transfer(closestT, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
           creep.moveTo(closestT);
