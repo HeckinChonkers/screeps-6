@@ -50,10 +50,14 @@ var utils = {
 
   // Reparatur mit PrioritÃ¤ten
   cRepair: function(creep) {
+    function closest(target) {
+      return creep.pos.findClosestByPath(target);
+    };
     var targets = creep.room.find(FIND_STRUCTURES, {
       filter: object => object.hits < object.hitsMax
     });
     targets.sort((a, b) => a.hits - b.hits);
+    utils.cLog(targets);
 
     // ToDo: Clusterfuck auflÃ¶sen
     var walls = creep.room.find(FIND_STRUCTURES, {
@@ -77,16 +81,18 @@ var utils = {
 
     // ToDo: Clusterfuck auflÃ¶sen
     if (containers.length) {
+      var closestCon = closest(containers);
       console.log('containersToRepair: ' + containers.length + ', ' +
-        containers[0].hits + '|' + containers[0].hitsMax);
-      if (creep.repair(containers[0]) == ERR_NOT_IN_RANGE) {
-        creep.moveTo(containers[0]);
+        closestCon.hits + '|' + closestCon.hitsMax);
+      if (creep.repair(closestCon) == ERR_NOT_IN_RANGE) {
+        creep.moveTo(closestCon);
       }
     } else if (roads.length) {
-      console.log('roadsToRepair: ' + roads.length + ', ' + roads[0].hits +
-        '|' + roads[0].hitsMax);
-      if (creep.repair(roads[0]) == ERR_NOT_IN_RANGE) {
-        creep.moveTo(roads[0]);
+      var closestRd = closest(roads);
+      console.log('roadsToRepair: ' + roads.length + ', ' + closestRd.hits +
+        '|' + closestRd.hitsMax);
+      if (creep.repair(closestRd) == ERR_NOT_IN_RANGE) {
+        creep.moveTo(closestRd);
       }
     } else {
       if (targets.length > 0) {
