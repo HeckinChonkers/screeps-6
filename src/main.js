@@ -25,7 +25,7 @@ module.exports.loop = function() {
 
     if (creep.memory.role === 'harvester') {
       if (myRoom.energyAvailable === myRoom.energyCapacityAvailable && utils.containers(
-          'nFull', creep).length === 0) {
+          'nFull', creep).length === 0 && _.sum(creep.room.storage.store) === creep.room.storage.storeCapacity) {
         roleUpgrader.run(creep);
       } else {
         roleHarvester.run(creep);
