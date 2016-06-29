@@ -38,17 +38,17 @@ var roleHarvester = {
         }
       });
       if (spawners.length > 0) {
-        var closestS = creep.pos.findClosestByPath(targets);
+        var closestS = creep.pos.findClosestByRange(spawners);
         if (creep.transfer(closestS, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
           creep.moveTo(closestS);
         }
       } else if (targets.length > 0) {
-        var closestT = creep.pos.findClosestByPath(targets);
+        var closestT = creep.pos.findClosestByRange(targets);
         if (creep.transfer(closestT, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
           creep.moveTo(closestT);
         }
       } else if (utils.containers('nFull', creep).length > 0) {
-        var cloNFC = creep.pos.findClosestByPath(utils.containers('nFull', creep));
+        var cloNFC = creep.pos.findClosestByRange(utils.containers('nFull', creep));
         if (creep.transfer(cloNFC, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
           creep.moveTo(cloNFC);
         }
