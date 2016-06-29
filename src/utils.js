@@ -54,7 +54,7 @@ var utils = {
       return creep.pos.findClosestByPath(target);
     };
     var targets = creep.room.find(FIND_STRUCTURES, {
-      filter: object => object.hits < object.hitsMax
+      filter: object => object.hits < Math.round(object.hitsMax + 0.9)
     });
     targets.sort((a, b) => a.hits - b.hits);
 
@@ -95,7 +95,7 @@ var utils = {
       }
     } else {
       if (targets.length > 0) {
-        var closestTopTgt = closest(targets.slice(1, 21));
+        var closestTopTgt = closest(targets.slice(1, 25));
         if (creep.repair(targets[0]) == ERR_NOT_IN_RANGE) {
           creep.moveTo(targets[0]);
         }
