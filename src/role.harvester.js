@@ -41,7 +41,7 @@ var roleHarvester = {
         if (creep.transfer(cloNFC, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
           creep.moveTo(cloNFC);
         }
-      } else if (Boolean(creep.room.storage) && _.sum(creep.room.storage.store) < creep.room.storage.storeCapacity) {
+      } else if (_.sum(creep.room.storage.store) < creep.room.storage.storeCapacity) {
         if (creep.transfer(creep.room.storage, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
           creep.moveTo(creep.room.storage);
         }

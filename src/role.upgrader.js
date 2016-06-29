@@ -24,7 +24,13 @@ var roleUpgrader = {
         creep.moveTo(creep.room.controller);
       }
     } else {
-      utils.cHarvest(creep);
+      if(Boolean(creep.room.storage) && _.sum(creep.room.storage.store) < creep.room.storage.storeCapacity) {
+        if (creep.room.storage.transfer(creep, 'energy') === ERR_NOT_IN_RANGE) {
+          creep.moveTo(creep.room.storage);
+        }
+      } else {
+        utils.cHarvest(creep);
+      }
     }
   }
 };

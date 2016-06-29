@@ -29,10 +29,12 @@ var roleBuilder = {
         utils.cRepair(creep);
       }
     } else {
-      if (utils.containers('nEmpty', creep).length > 0) {
-
-        if (utils.containers('nEmpty', creep)[0].transfer(
-            creep, 'energy') === ERR_NOT_IN_RANGE) {
+      if (Boolean(creep.room.storage) && creep.room.storage.energy >= creep.carryCapacity) {
+        if (creep.room.storage.transfer(creep, 'energy') === ERR_NOT_IN_RANGE) {
+          creep.moveTo(creep.room.storage);
+        }
+      } else if (utils.containers('nEmpty', creep).length > 0) {
+       if (utils.containers('nEmpty', creep)[0].transfer(creep, 'energy') === ERR_NOT_IN_RANGE) {
           creep.moveTo(utils.containers('nEmpty', creep)[0]);
         }
       } else if (Game.spawns.Spawn1.energy > 200 &&
