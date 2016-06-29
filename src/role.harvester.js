@@ -24,7 +24,8 @@ var roleHarvester = {
     } else {
       var targets = creep.room.find(FIND_STRUCTURES, {
         filter: (structure) => {
-          return (structure.structureType == STRUCTURE_TOWER ||
+          return (structure.structureType == STRUCTURE_STORAGE || 
+              structure.structureType == STRUCTURE_TOWER ||
               structure.structureType == STRUCTURE_EXTENSION ||
               structure.structureType == STRUCTURE_SPAWN) &&
               structure.energy < structure.energyCapacity;
@@ -38,6 +39,10 @@ var roleHarvester = {
         if (creep.transfer(utils.containers('nFull', creep)[0],
             RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
           creep.moveTo(utils.containers('nFull', creep)[0]);
+        }
+      } else if (creep.room.storage !== {} && _.sum(creep.room.storage.store) < creep.room.storage.storeCapacity) {
+        if (creep.transfer(creep.room.storage, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
+          creep.moveTo(creep.room.storage);
         }
       }
     }
