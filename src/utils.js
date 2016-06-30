@@ -12,12 +12,12 @@ conf = require('conf');
 
 var utils = {
 
-  cLog: function(input) {
+  cLog: function (input) {
     console.log(JSON.stringify(input));
   },
 
   // tote Creeps aus dem Memory loeschen
-  clearMem: function() {
+  clearMem: function () {
     for (var name in Memory.creeps) {
       if (!Game.creeps[name]) {
         delete Memory.creeps[name];
@@ -26,7 +26,7 @@ var utils = {
     }
   },
 
-  cFullCheck: function(creep) {
+  cFullCheck: function (creep) {
     if (creep.memory.fullCheck && creep.carry.energy === 0) {
       creep.memory.fullCheck = false;
       creep.memory.currentTarget = '';
@@ -38,7 +38,7 @@ var utils = {
   },
 
   // Energie-Ernte für unterschiedliche Rollen
-  cHarvest: function(creep) {
+  cHarvest: function (creep) {
 
     if (_.sum(creep.carry) === 0 && creep.room.find(RESOURCE_ENERGY).length !== 0) {
       var _dropRes = creep.room.find(RESOURCE_ENERGY)[0];
@@ -63,9 +63,39 @@ var utils = {
   },
 
   // Reparatur mit PrioritÃ¤ten
-  cRepair: function(creep) {
+  cRepair: function (creep) {
     function closest(target) {
       return creep.pos.findClosestByPath(target);
+    };
+
+    function createToDoList(creep) {
+      creep.memory.toDoList = [];
+      var _cache = [];
+      var _shortList = [];
+      var _roads = creep.room.find(FIND_STRUCTURES, {
+        filter: (structure) => {
+          return structure.structureType === STRUCTURE_ROAD &&
+            structure.hits < Math.round(structure.hitsMax * 0.8);
+        }
+      });
+      var _allTargets = creep.room.find(FIND_STRUCTURES, {
+        filter: object => object.hits < Math.round(object.hitsMax * 0.9)
+      });
+      var _containers = _.filter(utils.containers('all'), (c) => c.hits <= Math.round(c.hitsMax * 0.9));
+
+      _cache = _containers.concat(roads);
+      console.log('1st_chache: ' + _cache.length);
+      if (_cache.length === 0) {
+        _cache = _allTargets;
+      }
+      _cache.sort((a, b) => a.hits - b.hits);
+
+      _shortList = _cache.slice[0,20];
+
+      _shortList.forEach(function(val,inx,arr){
+        creep.memory.toDoList.push(val.id);
+      });
+
     };
     var targets = creep.room.find(FIND_STRUCTURES, {
       filter: object => object.hits < Math.round(object.hitsMax * 0.9)
@@ -89,7 +119,7 @@ var utils = {
     roads.sort((a, b) => a.hits - b.hits);
 
     var containers = _.filter(utils.containers('all'), (c) => c.hits <=
-      Math.round(c.hitsMax * 0.9));
+    Math.round(c.hitsMax * 0.9));
     containers.sort((a, b) => a.hits - b.hits);
 
     // ToDo: Clusterfuck auflösen
@@ -119,7 +149,7 @@ var utils = {
 
   // non-empty-Containers
 
-  containers: function(type, creep) {
+  containers: function (type, creep) {
     /*
      * 'all'/() -> alle
      * 'empty' -> empty
@@ -127,13 +157,13 @@ var utils = {
      * nEmpty  -> not Empty
      * nFull   -> not Full
      */
-    var _type = type || 'all',
-      myRoom = creep ? creep.room : Game.spawns.Spawn1.room,
-      conts = myRoom.find(FIND_STRUCTURES, {
-        filter: (structure) => {
-          return (structure.structureType === STRUCTURE_CONTAINER);
-        }
-      });
+    var _type  = type || 'all',
+        myRoom = creep ? creep.room : Game.spawns.Spawn1.room,
+        conts  = myRoom.find(FIND_STRUCTURES, {
+          filter: (structure) => {
+            return (structure.structureType === STRUCTURE_CONTAINER);
+          }
+        });
     switch (_type) {
       case 'full':
         return _.filter(conts, (c) => _.sum(c.store) === c.storeCapacity);
@@ -148,19 +178,19 @@ var utils = {
     }
   },
 
-  status: function() {
+  status: function () {
     if (utils.GTC() % conf.statusTimer === 0) {
       console.log('ping');
     }
   },
 
   // Global Tick Counter
-  _gtcCount: function() {
+  _gtcCount: function () {
     var _gtc = Memory.GTC || 0;
     _gtc++;
     Memory.GTC = _gtc;
   },
-  GTC: function(stuff) {
+  GTC: function (stuff) {
     return Memory.GTC;
   }
 };
