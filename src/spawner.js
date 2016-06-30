@@ -38,7 +38,7 @@ var spawner = {
       var bodyType = Math.floor(spawner.eAvail/100)*100,
           bodyConf = conf.creepBodies.workers
       if (Boolean(bodyConf[bodyType])) {
-        console.log('Bodytype:' + bodyType + '|eAvail:' + eAvail);
+        console.log('Bodytype:' + bodyType + '|eAvail:' + spawner.eAvail);
         return bodyConf[bodyType]
       } else { //letztes Element ausgeben
         console.log('lastBodytype:' + bodyConf[Object.keys(bodyConf)[Object.keys(bodyConf).length-1]] + '|eAvail:' + spawner.eAvail);
