@@ -39,10 +39,19 @@ var utils = {
 
   // Energie-Ernte für unterschiedliche Rollen
   cHarvest: function(creep) {
+
+    if (_.sum(creep.carry) === 0 && creep.room.find(RESSOURCE_ENERGY).length !== 0) {
+      var _dropRes = creep.room.find(RESSOURCE_ENERGY)[0];
+      if (creep.pickup(_dropRes) == ERR_NOT_IN_RANGE) {
+        creep.moveTo(_dropRes);
+      }
+    }
+
     if (!creep.memory.currentTarget || creep.memory.currentTarget === '') {
       creep.memory.currentTarget = creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE).id;
     }
     var target = Game.getObjectById(creep.memory.currentTarget);
+    
     if (target) {
       if (creep.harvest(target) == ERR_NOT_IN_RANGE) {
         creep.moveTo(target);
