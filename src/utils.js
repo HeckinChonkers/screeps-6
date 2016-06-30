@@ -70,33 +70,21 @@ var utils = {
 
     function createToDoList(creep) {
       creep.memory.toDoList = [];
-      var _cache = [];
       var _shortList = [];
-      var _roads = creep.room.find(FIND_STRUCTURES, {
-        filter: (structure) => {
-          return structure.structureType === STRUCTURE_ROAD &&
-            structure.hits < Math.round(structure.hitsMax * 0.8);
-        }
-      });
-      var _allTargets = creep.room.find(FIND_STRUCTURES, {
+      var _cache = creep.room.find(FIND_STRUCTURES, {
         filter: object => object.hits < Math.round(object.hitsMax * 0.9)
       });
-      var _containers = _.filter(utils.containers('all'), (c) => c.hits <= Math.round(c.hitsMax * 0.9));
-
-      _cache = _containers.concat(roads);
-      console.log('1st_chache: ' + _cache.length);
-      if (_cache.length === 0) {
-        _cache = _allTargets;
-      }
       _cache.sort((a, b) => a.hits - b.hits);
 
-      _shortList = _cache.slice[0,20];
-
-      _shortList.forEach(function(val,inx,arr){
-        creep.memory.toDoList.push(val.id);
-      });
-
+      for (str in _cache) {
+        _shortList.push(_cache[str].id);
+      }
+      if (_shortList.length > 20) {
+        _shortList = _shortList.slice(0, 20);
+      }
+      creep.memory.toDoList = _shortList;
     };
+    
     var targets = creep.room.find(FIND_STRUCTURES, {
       filter: object => object.hits < Math.round(object.hitsMax * 0.9)
     });
