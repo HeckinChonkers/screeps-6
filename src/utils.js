@@ -16,7 +16,7 @@ var utils = {
     console.log(JSON.stringify(input));
   },
 
-  // tote Creeps aus dem Memory lÃ¶schen
+  // tote Creeps aus dem Memory loeschen
   clearMem: function() {
     for (var name in Memory.creeps) {
       if (!Game.creeps[name]) {
@@ -29,21 +29,26 @@ var utils = {
   cFullCheck: function(creep) {
     if (creep.memory.fullCheck && creep.carry.energy === 0) {
       creep.memory.fullCheck = false;
+      creep.memory.currentTarget = '';
     }
     if (!creep.memory.fullCheck && creep.carry.energy === creep.carryCapacity) {
       creep.memory.fullCheck = true;
+      creep.memory.currentTarget = '';
     }
   },
 
-  // Energie-Ernte fÃ¼r unterschiedliche Rollen
+  // Energie-Ernte für unterschiedliche Rollen
   cHarvest: function(creep) {
-    var target = creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE);
-    if (creep.memory.role === 'upgrader' || creep.memory.role === 'builder') {
-      target = creep.room.find(FIND_SOURCES)[0];
+    if (!creep.memory.currentTarget || creep.memory.currentTarget === '') {
+      creep.memory.currentTarget = creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE).id;
     }
+    var target = Game.getObjectById(creep.memory.currentTarget);
     if (target) {
       if (creep.harvest(target) == ERR_NOT_IN_RANGE) {
         creep.moveTo(target);
+      }
+      if (!target.amount || target.amount === 0) {
+        creep.memory.currentTarget = '';
       }
     }
   },
@@ -58,7 +63,7 @@ var utils = {
     });
     targets.sort((a, b) => a.hits - b.hits);
 
-    // ToDo: Clusterfuck auflÃ¶sen
+    // ToDo: Clusterfuck auflösen
     var walls = creep.room.find(FIND_STRUCTURES, {
       filter: (structure) => {
         return structure.structureType === STRUCTURE_WALL;
@@ -78,7 +83,7 @@ var utils = {
       Math.round(c.hitsMax * 0.9));
     containers.sort((a, b) => a.hits - b.hits);
 
-    // ToDo: Clusterfuck auflÃ¶sen
+    // ToDo: Clusterfuck auflösen
     if (containers.length) {
       var closestCon = closest(containers);
       console.log('containersToRepair: ' + containers.length + ', ' +

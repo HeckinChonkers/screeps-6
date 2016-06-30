@@ -22,41 +22,47 @@ var roleHarvester = {
     if (!creep.memory.fullCheck) {
       utils.cHarvest(creep);
     } else {
+      var target;
 
-      var spawners = creep.room.find(FIND_STRUCTURES, {
-        filter: (structure) => {
-          return (structure.structureType == STRUCTURE_EXTENSION ||
+      if (!creep.memory.currentTarget || creep.memory.currentTarget === 0) {
+        var spawners = creep.room.find(FIND_STRUCTURES, {
+          filter: (structure) => {
+            return (structure.structureType == STRUCTURE_EXTENSION ||
               structure.structureType == STRUCTURE_SPAWN) &&
               structure.energy < structure.energyCapacity;
-        }
-      });
-      var targets = creep.room.find(FIND_STRUCTURES, {
-        filter: (structure) => {
-          return (structure.structureType == STRUCTURE_STORAGE ||
+          }
+        });
+        var allTargets = creep.room.find(FIND_STRUCTURES, {
+          filter: (structure) => {
+            return (structure.structureType == STRUCTURE_STORAGE ||
               structure.structureType == STRUCTURE_TOWER) &&
               structure.energy < Math.round(structure.energyCapacity*0.95);
+          }
+        });
+
+        if (spawners.length > 0) {
+          creep.memory.currentTarget = creep.pos.findClosestByRange(spawners).id;
+        } else if (allTargets.length > 0) {
+          creep.memory.currentTarget = creep.pos.findClosestByRange(allTargets).id;
+        } else if (utils.containers('nFull', creep).length > 0) {
+          creep.memory.currentTarget = creep.pos.findClosestByRange(utils.containers('nFull', creep)).id;
+        } else if (_.sum(creep.room.storage.store) < creep.room.storage.storeCapacity) {
+          creep.memory.currentTarget = creep.room.storage.id;
         }
-      });
-      if (spawners.length > 0) {
-        var closestS = creep.pos.findClosestByRange(spawners);
-        if (creep.transfer(closestS, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-          creep.moveTo(closestS);
+
+      } else {
+        target = Game.getObjectById(creep.memory.currentTarget);
+        if ((target.structureType === STRUCTURE_STORAGE && _.sum(target.store) === target.storeCapacity) ||
+            (target.energy === target.energyCapacity)) {
+          creep.memory.currentTarget = '';
         }
-      } else if (targets.length > 0) {
-        var closestT = creep.pos.findClosestByRange(targets);
-        if (creep.transfer(closestT, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-          creep.moveTo(closestT);
-        }
-      } else if (utils.containers('nFull', creep).length > 0) {
-        var cloNFC = creep.pos.findClosestByRange(utils.containers('nFull', creep));
-        if (creep.transfer(cloNFC, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-          creep.moveTo(cloNFC);
-        }
-      } else if (_.sum(creep.room.storage.store) < creep.room.storage.storeCapacity) {
-        if (creep.transfer(creep.room.storage, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
-          creep.moveTo(creep.room.storage);
+        if (creep.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+          creep.moveTo(target);
         }
       }
+
+
+
     }
   }
 };
