@@ -23,7 +23,7 @@ var spawner = {
     var mySpawn = Game.spawns.Spawn1;
 
     function spawnCreep(cRole) {
-      return mySpawn.createCreep(bodyChooser(), getName(cRole), {role: cRole});
+      return mySpawn.createCreep(bodyChooser(cRole), getName(cRole), {role: cRole});
     }
 
     function getName(cRole) {
@@ -31,9 +31,15 @@ var spawner = {
       return cRole + String(d.getTime()).substring(6);
     }
 
-    function bodyChooser() {
+    function bodyChooser(cRole) {
       var bodyType = Math.floor(spawner.eAvail / 100) * 100,
-        bodyConf = conf.creepBodies.workers;
+          bodyConf;
+        if (cRole = 'mule') {
+          bodyConf = conf.creepBodies.mules;
+        } else {
+          bodyConf = conf.creepBodies.workers;
+        }
+
       if (Boolean(bodyConf[bodyType])) {
         console.log('Bodytype:' + bodyType + '|eAvail:' + spawner.eAvail);
         return bodyConf[bodyType];
