@@ -18,7 +18,7 @@ var utils = {
 
   // tote Creeps aus dem Memory loeschen
   clearMem: function () {
-    for (var name in Memory.creeps) {
+    for (let name in Memory.creeps) {
       if (!Game.creeps[name]) {
         delete Memory.creeps[name];
         console.log('Clearing non-existing creep memory:', name);
@@ -87,7 +87,7 @@ var utils = {
 
       creep.memory.currentTarget = _cache.shift().id;
 
-      for (var str in _cache) {
+      for (let str in _cache) {
         _shortList.push(_cache[str].id);
       }
       if (_shortList.length > 20) {
@@ -101,7 +101,7 @@ var utils = {
     function getTargetFromList(creep) {
       var _toDoListParsed = [],
         _toDoListLength = creep.memory.toDoList.length;
-      for (var i = 0; i < _toDoListLength; i++) {
+      for (let i = 0; i < _toDoListLength; i++) {
         _toDoListParsed.push(Game.getObjectById(creep.memory.toDoList[i]));
       }
       closestTarget = closest(_toDoListParsed);
@@ -138,55 +138,6 @@ var utils = {
       console.log('no target, getting new');
       getTargetFromList(creep);
     }
-
-    // var targets = creep.room.find(FIND_STRUCTURES, {
-    //   filter: object => object.hits < Math.round(object.hitsMax * 0.9)
-    // });
-    // targets.sort((a, b) => a.hits - b.hits);
-    //
-    // // ToDo: Clusterfuck aufloesen
-    // var walls = creep.room.find(FIND_STRUCTURES, {
-    //   filter: (structure) => {
-    //     return structure.structureType === STRUCTURE_WALL;
-    //   }
-    // });
-    // walls.sort((a, b) => a.hits - b.hits);
-    //
-    // var roads = creep.room.find(FIND_STRUCTURES, {
-    //   filter: (structure) => {
-    //     return structure.structureType === STRUCTURE_ROAD &&
-    //       structure.hits < Math.round(structure.hitsMax * 0.7);
-    //   }
-    // });
-    // roads.sort((a, b) => a.hits - b.hits);
-
-    // var containers = _.filter(utils.containers('all'), (c) => c.hits <=
-    //   Math.round(c.hitsMax * 0.9));
-    // containers.sort((a, b) => a.hits - b.hits);
-
-    // ToDo: Clusterfuck aufloesen
-    // if (containers.length) {
-    //   var closestCon = closest(containers);
-    //   console.log('containersToRepair: ' + containers.length + ', ' +
-    //     closestCon.hits + '|' + closestCon.hitsMax);
-    //   if (creep.repair(closestCon) == ERR_NOT_IN_RANGE) {
-    //     creep.moveTo(closestCon);
-    //   }
-    // } else if (roads.length) {
-    //   var closestRd = closest(roads);
-    //   console.log('roadsToRepair: ' + roads.length + ', ' + closestRd.hits +
-    //     '|' + closestRd.hitsMax);
-    //   if (creep.repair(closestRd) == ERR_NOT_IN_RANGE) {
-    //     creep.moveTo(closestRd);
-    //   }
-    // } else {
-    //   if (targets.length > 0) {
-    //     var closestTopTgt = closest(targets.slice(1, 21));
-    //     if (creep.repair(closestTopTgt) == ERR_NOT_IN_RANGE) {
-    //       creep.moveTo(closestTopTgt);
-    //     }
-    //   }
-    // }
   },
 
   // non-empty-Containers

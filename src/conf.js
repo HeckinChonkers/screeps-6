@@ -5,6 +5,7 @@ var conf = {
   statusTimer: 100,
 
   workers: {
+    mule: 1,
     upgrader: 1,
     builder: 1,
     harvester: 3
@@ -37,6 +38,16 @@ var conf = {
       1100: [WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
       1200: [WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
       1300: [WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE]
+    },
+
+    mules: {
+      200: [CARRY, MOVE],
+      300: [CARRY, CARRY, MOVE, MOVE],
+      400: [CARRY, CARRY, MOVE, MOVE, MOVE],
+      500: [CARRY, CARRY, MOVE, MOVE, MOVE],
+      600: [CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE],
+      700: [CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE],
+      800: [CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE]
     }
   }
 };
