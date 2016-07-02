@@ -3,7 +3,7 @@ var utils = require('utils');
 var mule = {
   run: function (creep) {
     var storage = creep.room.storage,
-        neConts = utils.containers(nEmpty)
+        neConts = utils.containers('nEmpty')
 
     utils.cFullCheck(creep);
 
