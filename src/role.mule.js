@@ -5,9 +5,9 @@ var mule = {
     var storage = creep.room.storage,
         neConts = utils.containers(nEmpty)
 
-    utils.fullCheck(creep);
+    utils.cFullCheck(creep);
 
-    if (creep.memory.cFullCheck) {
+    if (creep.memory.fullCheck) {
       dropE(creep);
     } else {
       getE(creep);
