@@ -49,27 +49,24 @@ var utils = {
       if (creep.pickup(_dropRes) == ERR_NOT_IN_RANGE) {
         creep.moveTo(_dropRes);
       }
-    }
-
-
-    if (!creep.memory.currentTarget || creep.memory.currentTarget === '') {
-      if (creep.memory.role === 'upgrader') {
-        creep.memory.currentTarget = creep.room.source[0];
-      } else {
-        creep.memory.currentTarget = creep.pos.findClosestByRange(
-          FIND_SOURCES_ACTIVE).id;
+    } else {
+      if (!creep.memory.currentTarget || creep.memory.currentTarget === '') {
+        if (creep.memory.role === 'upgrader') {
+          creep.memory.currentTarget = creep.room.find(FIND_SOURCES)[0].id;
+        } else {
+          creep.memory.currentTarget = creep.pos.findClosestByRange(
+            FIND_SOURCES_ACTIVE).id;
+        }
       }
+      var target = Game.getObjectById(creep.memory.currentTarget);
 
-
-    }
-    var target = Game.getObjectById(creep.memory.currentTarget);
-
-    if (target) {
-      if (creep.harvest(target) == ERR_NOT_IN_RANGE) {
-        creep.moveTo(target);
-      }
-      if (!target.amount || target.amount === 0) {
-        creep.memory.currentTarget = '';
+      if (target) {
+        if (creep.harvest(target) == ERR_NOT_IN_RANGE) {
+          creep.moveTo(target);
+        }
+        if (!target.amount || target.amount === 0) {
+          creep.memory.currentTarget = '';
+        }
       }
     }
   },
