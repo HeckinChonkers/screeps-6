@@ -29,12 +29,12 @@ var roleTower = {
           filter: (structure) => structure.structureType !== STRUCTURE_WALL &&
             structure.hits < Math.round(structure.hitsMax * 0.9)
         });
-        closestDamagedStructure.sort((a, b) => (a.hits - b.hits));
+       damagedStructure.sort((a, b) => (a.hits - b.hits));
     if (closestHostile) {
       tower.attack(closestHostile);
     }
-    if (!closestHostile && closestDamagedStructure) {
-      tower.repair(closestDamagedStructure);
+    if (!closestHostile && damagedStructure) {
+      tower.repair(damagedStructure);
     }
 
   }
