@@ -13,7 +13,7 @@ var utils = require('utils');
 var roleUpgrader = {
 
   /** @param {Creep} creep **/
-  run: function(creep) {
+  run: function (creep) {
     creep.memory.currentTask = 'upgrade';
 
     utils.cFullCheck(creep);
@@ -24,7 +24,7 @@ var roleUpgrader = {
         creep.moveTo(creep.room.controller);
       }
     } else {
-      if(Boolean(creep.room.storage) && _.sum(creep.room.storage.store) < creep.room.storage.storeCapacity) {
+      if(Boolean(creep.room.storage) && creep.room.storage.store.energy !== 0) {
         if (creep.room.storage.transfer(creep, 'energy') === ERR_NOT_IN_RANGE) {
           creep.moveTo(creep.room.storage);
         }

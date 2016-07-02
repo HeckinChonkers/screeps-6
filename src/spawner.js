@@ -16,13 +16,9 @@ var spawner = {
     function filterCreeps(cRole) {
       return _.filter(Game.creeps, (creep) => creep.memory.role === cRole);
     }
-    if (filterCreeps(cRole).length < conf.workers[cRole]) {
-      return true;
-    } else {
-      return false;
-    }
+    return filterCreeps(cRole).length < conf.workers[cRole];
   },
-  controller: function () {
+  controller: function() {
 
     var mySpawn = Game.spawns.Spawn1;
 
@@ -34,28 +30,30 @@ var spawner = {
       var d = new Date();
       return cRole + String(d.getTime()).substring(6);
     }
-    function bodyChooser(){
-      var bodyType = Math.floor(spawner.eAvail/100)*100,
-          bodyConf = conf.creepBodies.workers
+
+    function bodyChooser() {
+      var bodyType = Math.floor(spawner.eAvail / 100) * 100,
+        bodyConf = conf.creepBodies.workers;
       if (Boolean(bodyConf[bodyType])) {
         console.log('Bodytype:' + bodyType + '|eAvail:' + spawner.eAvail);
-        return bodyConf[bodyType]
+        return bodyConf[bodyType];
       } else { //letztes Element ausgeben
-        console.log('lastBodytype:' + bodyConf[Object.keys(bodyConf)[Object.keys(bodyConf).length-1]] + '|eAvail:' + spawner.eAvail);
-        return bodyConf[Object.keys(bodyConf)[Object.keys(bodyConf).length-1]];
+        console.log('lastBodytype:' + bodyConf[Object.keys(bodyConf)[Object
+          .keys(bodyConf).length - 1]] + '|eAvail:' + spawner.eAvail);
+        return bodyConf[Object.keys(bodyConf)[Object.keys(bodyConf).length -
+          1]];
       }
-      return conf.creepBodies.workers[bodyType];
     }
 
     for (var cRole in conf.workers) {
       if (spawner.needCreeps(cRole) && spawner.eAvail >= 200) {
-          var newName = spawnCreep(cRole) ;
-          console.log('Spawning new ' + cRole + ': ' + newName);
+        var newName = spawnCreep(cRole);
+        console.log('Spawning new ' + cRole + ': ' + newName);
       }
     }
   },
-  status: function () {
-    console.log('Energy ' + spawner.eAvail+'|'+spawner.eCapa);
+  status: function() {
+    console.log('Energy ' + spawner.eAvail + '|' + spawner.eCapa);
     //console.log(spawner.harvesters().length());
   }
 

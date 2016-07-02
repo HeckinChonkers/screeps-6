@@ -24,7 +24,7 @@ var roleTower = {
 
   towerControl: function(tower) {
     var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS),
-      closestDamagedStructure = tower.pos.findClosestByRange(
+      damagedStructure = tower.pos.find(
         FIND_STRUCTURES, {
           filter: (structure) => structure.structureType !== STRUCTURE_WALL &&
             structure.hits < Math.round(structure.hitsMax * 0.9)

@@ -5,7 +5,7 @@ var conf = {
   statusTimer: 100,
 
   workers: {
-    upgrader: 2,
+    upgrader: 1,
     builder: 1,
     harvester: 3
   },
