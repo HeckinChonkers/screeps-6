@@ -12,12 +12,12 @@ conf = require('conf');
 
 var utils = {
 
-  cLog: function(input) {
+  cLog: function (input) {
     console.log(JSON.stringify(input));
   },
 
   // tote Creeps aus dem Memory loeschen
-  clearMem: function() {
+  clearMem: function () {
     for (var name in Memory.creeps) {
       if (!Game.creeps[name]) {
         delete Memory.creeps[name];
@@ -26,10 +26,13 @@ var utils = {
     }
   },
 
-  cFullCheck: function(creep) {
+  cFullCheck: function (creep) {
     if (creep.memory.fullCheck && creep.carry.energy === 0) {
       creep.memory.fullCheck = false;
       creep.memory.currentTarget = '';
+      if (Boolean(creep.memory.toDoList)) {
+        creep.memory.toDoList = [];
+      }
     }
     if (!creep.memory.fullCheck && creep.carry.energy === creep.carryCapacity) {
       creep.memory.fullCheck = true;
@@ -37,8 +40,8 @@ var utils = {
     }
   },
 
-  // Energie-Ernte fÃ¼r unterschiedliche Rollen
-  cHarvest: function(creep) {
+  // Energie-Ernte fuer unterschiedliche Rollen
+  cHarvest: function (creep) {
 
     if (_.sum(creep.carry) === 0 && creep.room.find(RESOURCE_ENERGY).length !==
       0) {
@@ -65,18 +68,21 @@ var utils = {
   },
 
   // Reparatur mit Prioritaeten
-  cRepair: function(creep) {
-    function closest(target) {
-      return creep.pos.findClosestByPath(target);
+  cRepair: function (creep) {
+    function closest(targets) {
+      return creep.pos.findClosestByPath(targets);
     }
 
     function createToDoList(creep) {
       creep.memory.toDoList = [];
+      creep.memory.currentTarget = [];
       var _shortList = [];
       var _cache = creep.room.find(FIND_STRUCTURES, {
         filter: object => object.hits < Math.round(object.hitsMax * 0.9)
       });
       _cache.sort((a, b) => a.hits - b.hits);
+
+      creep.memory.currentTarget = _cache.shift().id;
 
       for (var str in _cache) {
         _shortList.push(_cache[str].id);
@@ -85,61 +91,104 @@ var utils = {
         _shortList = _shortList.slice(0, 20);
       }
       creep.memory.toDoList = _shortList;
+      console.log('new toDoList created');
+    }
+    // createToDoList(creep);
+
+    function getTargetFromList(creep) {
+      var _toDoListParsed = [],
+        _toDoListLength = creep.memory.toDoList.length;
+      for (var i = 0; i < _toDoListLength; i++) {
+        _toDoListParsed.push(Game.getObjectById(creep.memory.toDoList[i]));
+      }
+      closestTarget = closest(_toDoListParsed);
+      creep.memory.currentTarget = closestTarget.id;
     }
 
-    var targets = creep.room.find(FIND_STRUCTURES, {
-      filter: object => object.hits < Math.round(object.hitsMax * 0.9)
-    });
-    targets.sort((a, b) => a.hits - b.hits);
+    function removeCurrentTargetFromList(creep) {
+      var _removeIndex = creep.memory.toDoList.indexOf(creep.memory.currentTarget);
 
-    // ToDo: Clusterfuck auflÃ¶sen
-    var walls = creep.room.find(FIND_STRUCTURES, {
-      filter: (structure) => {
-        return structure.structureType === STRUCTURE_WALL;
-      }
-    });
-    walls.sort((a, b) => a.hits - b.hits);
+      creep.memory.toDoList.splice(_removeIndex, 1);
+      creep.memory.currentTarget = {};
+    }
 
-    var roads = creep.room.find(FIND_STRUCTURES, {
-      filter: (structure) => {
-        return structure.structureType === STRUCTURE_ROAD &&
-          structure.hits < Math.round(structure.hitsMax * 0.7);
-      }
-    });
-    roads.sort((a, b) => a.hits - b.hits);
+    if (!creep.memory.toDoList || creep.memory.toDoList.length < 15) {
+      createToDoList(creep);
+    }
+    if (!creep.memory.currentTarget) {
+      getTargetFromList(creep);
+    }
 
-    var containers = _.filter(utils.containers('all'), (c) => c.hits <=
-    Math.round(c.hitsMax * 0.9));
-    containers.sort((a, b) => a.hits - b.hits);
+    var currentLiveTarget = Game.getObjectById(creep.memory.currentTarget);
 
-    // ToDo: Clusterfuck auflÃ¶sen
-    if (containers.length) {
-      var closestCon = closest(containers);
-      console.log('containersToRepair: ' + containers.length + ', ' +
-        closestCon.hits + '|' + closestCon.hitsMax);
-      if (creep.repair(closestCon) == ERR_NOT_IN_RANGE) {
-        creep.moveTo(closestCon);
+    if (currentLiveTarget.hits < currentLiveTarget.hitsMax) {
+      var targetID = creep.memory.currentTarget;
+      liveTarget = Game.getObjectById(targetID);
+      if (creep.repair(liveTarget) == ERR_NOT_IN_RANGE) {
+        creep.moveTo(liveTarget);
       }
-    } else if (roads.length) {
-      var closestRd = closest(roads);
-      console.log('roadsToRepair: ' + roads.length + ', ' + closestRd.hits +
-        '|' + closestRd.hitsMax);
-      if (creep.repair(closestRd) == ERR_NOT_IN_RANGE) {
-        creep.moveTo(closestRd);
-      }
+    } else if (currentLiveTarget.hits === currentLiveTarget.hitsMax) {
+      console.log('target repaired');
+      removeCurrentTargetFromList(creep);
+      getTargetFromList(creep);
     } else {
-      if (targets.length > 0) {
-        var closestTopTgt = closest(targets.slice(1, 21));
-        if (creep.repair(closestTopTgt) == ERR_NOT_IN_RANGE) {
-          creep.moveTo(closestTopTgt);
-        }
-      }
+      console.log('no target, getting new');
+      getTargetFromList(creep);
     }
+
+    // var targets = creep.room.find(FIND_STRUCTURES, {
+    //   filter: object => object.hits < Math.round(object.hitsMax * 0.9)
+    // });
+    // targets.sort((a, b) => a.hits - b.hits);
+    //
+    // // ToDo: Clusterfuck aufloesen
+    // var walls = creep.room.find(FIND_STRUCTURES, {
+    //   filter: (structure) => {
+    //     return structure.structureType === STRUCTURE_WALL;
+    //   }
+    // });
+    // walls.sort((a, b) => a.hits - b.hits);
+    //
+    // var roads = creep.room.find(FIND_STRUCTURES, {
+    //   filter: (structure) => {
+    //     return structure.structureType === STRUCTURE_ROAD &&
+    //       structure.hits < Math.round(structure.hitsMax * 0.7);
+    //   }
+    // });
+    // roads.sort((a, b) => a.hits - b.hits);
+
+    // var containers = _.filter(utils.containers('all'), (c) => c.hits <=
+    //   Math.round(c.hitsMax * 0.9));
+    // containers.sort((a, b) => a.hits - b.hits);
+
+    // ToDo: Clusterfuck aufloesen
+    // if (containers.length) {
+    //   var closestCon = closest(containers);
+    //   console.log('containersToRepair: ' + containers.length + ', ' +
+    //     closestCon.hits + '|' + closestCon.hitsMax);
+    //   if (creep.repair(closestCon) == ERR_NOT_IN_RANGE) {
+    //     creep.moveTo(closestCon);
+    //   }
+    // } else if (roads.length) {
+    //   var closestRd = closest(roads);
+    //   console.log('roadsToRepair: ' + roads.length + ', ' + closestRd.hits +
+    //     '|' + closestRd.hitsMax);
+    //   if (creep.repair(closestRd) == ERR_NOT_IN_RANGE) {
+    //     creep.moveTo(closestRd);
+    //   }
+    // } else {
+    //   if (targets.length > 0) {
+    //     var closestTopTgt = closest(targets.slice(1, 21));
+    //     if (creep.repair(closestTopTgt) == ERR_NOT_IN_RANGE) {
+    //       creep.moveTo(closestTopTgt);
+    //     }
+    //   }
+    // }
   },
 
   // non-empty-Containers
 
-  containers: function(type, creep) {
+  containers: function (type, creep) {
     /*
      * 'all'/() -> alle
      * 'empty' -> empty
@@ -148,39 +197,39 @@ var utils = {
      * nFull   -> not Full
      */
     var _type = type || 'all',
-        myRoom = creep ? creep.room : Game.spawns.Spawn1.room,
-        conts = myRoom.find(FIND_STRUCTURES, {
-          filter: (structure) => {
-            return (structure.structureType === STRUCTURE_CONTAINER);
-          }
-        });
+      myRoom = creep ? creep.room : Game.spawns.Spawn1.room,
+      conts = myRoom.find(FIND_STRUCTURES, {
+        filter: (structure) => {
+          return (structure.structureType === STRUCTURE_CONTAINER);
+        }
+      });
     switch (_type) {
-      case 'full':
-        return _.filter(conts, (c) => _.sum(c.store) === c.storeCapacity);
-      case 'nFull':
-        return _.filter(conts, (c) => _.sum(c.store) < c.storeCapacity);
-      case 'empty':
-        return _.filter(conts, (c) => _.sum(c.store) === 0);
-      case 'nEmpty':
-        return _.filter(conts, (c) => _.sum(c.store) > 0);
-      case 'all':
-        return conts;
+    case 'full':
+      return _.filter(conts, (c) => _.sum(c.store) === c.storeCapacity);
+    case 'nFull':
+      return _.filter(conts, (c) => _.sum(c.store) < c.storeCapacity);
+    case 'empty':
+      return _.filter(conts, (c) => _.sum(c.store) === 0);
+    case 'nEmpty':
+      return _.filter(conts, (c) => _.sum(c.store) > 0);
+    case 'all':
+      return conts;
     }
   },
 
-  status: function() {
+  status: function () {
     if (utils.GTC() % conf.statusTimer === 0) {
-      console.log('ping');
+      console.log('status...');
     }
   },
 
   // Global Tick Counter
-  _gtcCount: function() {
+  _gtcCount: function () {
     var _gtc = Memory.GTC || 0;
     _gtc++;
     Memory.GTC = _gtc;
   },
-  GTC: function(stuff) {
+  GTC: function (stuff) {
     return Memory.GTC;
   }
 };
