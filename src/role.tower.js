@@ -14,7 +14,7 @@ var roleTower = {
     }
   },
 
-  towers: function(room){
+  towers: function(room) {
     return room.find(FIND_STRUCTURES, {
       filter: (structure) => {
         return structure.structureType === STRUCTURE_TOWER;
@@ -26,15 +26,17 @@ var roleTower = {
     var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS),
       closestDamagedStructure = tower.pos.findClosestByRange(
         FIND_STRUCTURES, {
-          filter: (structure) => structure.structureType !== STRUCTURE_WALL && structure.hits < Math.round(structure.hitsMax * 0.9)
+          filter: (structure) => structure.structureType !== STRUCTURE_WALL &&
+            structure.hits < Math.round(structure.hitsMax * 0.9)
         });
-
-    if (closestDamagedStructure) {
-      tower.repair(closestDamagedStructure);
-    }
+        closestDamagedStructure.sort((a, b) => (a.hits - b.hits));
     if (closestHostile) {
       tower.attack(closestHostile);
     }
+    if (!closestHostile && closestDamagedStructure) {
+      tower.repair(closestDamagedStructure);
+    }
+
   }
 };
 
