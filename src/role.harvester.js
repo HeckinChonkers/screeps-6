@@ -41,9 +41,9 @@ var roleHarvester = {
         });
 
         if (spawners.length > 0) {
-          creep.memory.currentTarget = creep.pos.findClosestByRange(spawners).id;
+          creep.memory.currentTarget = creep.pos.findClosestByPath(spawners).id;
         } else if (allTargets.length > 0) {
-          creep.memory.currentTarget = creep.pos.findClosestByRange(allTargets).id;
+          creep.memory.currentTarget = creep.pos.findClosestByPath(allTargets).id;
         } else if (utils.containers('nFull', creep).length > 0) {
           creep.memory.currentTarget = creep.pos.findClosestByRange(utils.containers('nFull', creep)).id;
         } else if (_.sum(creep.room.storage.store) < creep.room.storage.storeCapacity) {
@@ -56,7 +56,7 @@ var roleHarvester = {
             (target.energy === target.energyCapacity)) {
           creep.memory.currentTarget = '';
         }
-        if (creep.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+        if (creep.transfer(target, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
           creep.moveTo(target);
         }
       }
