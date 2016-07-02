@@ -43,17 +43,24 @@ var utils = {
   // Energie-Ernte fuer unterschiedliche Rollen
   cHarvest: function (creep) {
 
-    if (_.sum(creep.carry) === 0 && creep.room.find(RESOURCE_ENERGY).length !==
+    if (_.sum(creep.carry) < creep.carryCapacity && creep.room.find(RESOURCE_ENERGY).length !==
       0) {
-      var _dropRes = creep.room.find(RESOURCE_ENERGY)[0];
+      var _dropRes = creep.pos.findClosestByPath(RESOURCE_ENERGY);
       if (creep.pickup(_dropRes) == ERR_NOT_IN_RANGE) {
         creep.moveTo(_dropRes);
       }
     }
 
+
     if (!creep.memory.currentTarget || creep.memory.currentTarget === '') {
-      creep.memory.currentTarget = creep.pos.findClosestByRange(
-        FIND_SOURCES_ACTIVE).id;
+      if (creep.memory.role === 'upgrader') {
+        creep.memory.currentTarget = creep.room.source[0];
+      } else {
+        creep.memory.currentTarget = creep.pos.findClosestByRange(
+          FIND_SOURCES_ACTIVE).id;
+      }
+
+
     }
     var target = Game.getObjectById(creep.memory.currentTarget);
 
