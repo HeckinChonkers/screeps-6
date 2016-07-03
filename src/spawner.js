@@ -37,12 +37,19 @@ var spawner = {
 
     function bodyChooser(cRole) {
       var bodyType = Math.floor(eAvail / 100) * 100,
-        bodyConf;
-      if (cRole === 'mule') {
-        bodyConf = conf.creepBodies.mules;
-      } else {
-        bodyConf = conf.creepBodies.workers;
-      }
+          bodies = conf.creepBodies,
+          bodyConf;
+
+      switch (cRole) {
+        case 'mule':
+          bodyConf = bodies.mules;
+          break;
+        case 'grunt':
+          bodyConf = bodies.grunts;
+          break;
+        default:
+          bodyConf = bodies.workers;
+      };
 
       if (Boolean(bodyConf[bodyType])) {
         console.log('Bodytype:' + bodyType + '|eAvail:' + eAvail);
