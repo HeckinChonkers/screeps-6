@@ -15,7 +15,7 @@ module.exports.loop = function () {
   utils._gtcCount();
   utils.clearMem();
 
-  if (Game.spawns.Spawn1.energy >= 200) {
+  if (Game.spawns.Spawn1.room.energyAvailable >= 200) {
     spawner.controller();
   }
   roleTower._init(myRoom);
