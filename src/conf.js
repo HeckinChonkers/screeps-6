@@ -6,7 +6,7 @@ var conf = {
 
   workers: {
     mule: 2,
-    upgrader: 1,
+    upgrader: 2,
     builder: 1,
     harvester: 2
   },

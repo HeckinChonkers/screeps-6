@@ -26,17 +26,17 @@ var roleHarvester = {
 
       // wenn Mules gespawnt sind, entfällt die ganze Ziel-Suche
       if (Game.creeps, (creep) => creep.memory.role === 'mule') {
-        var mules = creep.room.find(FIND_MY_CREEPS, {
+        var muleCapa = creep.room.find(FIND_MY_CREEPS, {
           filter: (creep) => {
             return (creep.memory.role === 'mule' && _.sum(creep.carry) < creep.carryCapacity);
           }
         });
 
-        if (mules.length === 0) {
+        if (muleCapa.length === 0) {
           creep.say('no mules!');
           creep.drop(RESOURCE_ENERGY);
         } else {
-          var closestMule = creep.pos.findClosestByRange(mules);
+          var closestMule = creep.pos.findClosestByRange(muleCapa);
           if (creep.transfer(closestMule, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
             creep.moveTo(closestMule);
           }
