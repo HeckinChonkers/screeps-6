@@ -24,7 +24,7 @@ var roleHarvester = {
     } else {
       var target;
 
-      // wenn Mules gespawnt sind, entfÃ¤llt die ganze Ziel-Suche
+      // wenn Mules gespawnt sind, entfÃÂ¤llt die ganze Ziel-Suche
       if (Game.creeps, (creep) => creep.memory.role === 'mule') {
         var muleCapa = creep.room.find(FIND_MY_CREEPS, {
           filter: (creep) => {

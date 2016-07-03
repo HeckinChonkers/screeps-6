@@ -53,8 +53,8 @@ var mule = {
         }
       } else {
         var fullHarvesters = creep.room.find(FIND_MY_CREEPS, {
-          filter: (creep) => {
-            return creep.memory.role === 'harvester' && _.sum(creep.carry) === creep.carryCapacity;
+          filter: (creeps) => {
+            return creeps.memory.role === 'harvester' && _.sum(creeps.carry) === creeps.carryCapacity;
           }
         });
 
@@ -67,7 +67,22 @@ var mule = {
           creep.moveTo(fullHarvesters[0]);
         } else if (Game.flags.mules.length > 0) {
           creep.moveTo(Game.flags.mules);
+        } else {
+          idle(creep);
         }
+      }
+    }
+
+    function idle(creep) {
+      var workHarv = creep.room.find(FIND_MY_CREEPS, {
+        filter: (creeps) => {
+          return creeps.memory.role === 'harvester';
+        }
+      });
+      // Folge dem Harvester mit der meisten Energie
+      if (workHarv.length > 0) {
+        workHarv.sort((a, b) => _.sum(a.carry) - _.sum(b.carry));
+        creep.moveTo(workHarv[0]);
       }
     }
   }
