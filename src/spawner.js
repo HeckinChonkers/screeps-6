@@ -62,12 +62,19 @@ var spawner = {
       }
     }
 
-    for (var cRole in conf.workers) {
+    for (let cRole in conf.workers) {
       if (spawner.needCreeps(cRole) && eAvail >= 200) {
         var newName = spawnCreep(cRole);
         console.log('Spawning new ' + cRole + ': ' + newName);
       }
     }
+    for (let cRole in conf.soldiers) {
+      if (spawner.needCreeps(cRole) && eAvail >= 200) {
+        var newName = spawnCreep(cRole);
+        console.log('Spawning new ' + cRole + ': ' + newName);
+      }
+    }
+
   },
   status: function () {
     // console.log('Energy ' + spawner.eAvail + '|' + spawner.eCapa);
