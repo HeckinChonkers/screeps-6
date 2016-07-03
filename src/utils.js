@@ -81,7 +81,7 @@ var utils = {
       creep.memory.currentTarget = [];
       var _shortList = [];
       var _cache = creep.room.find(FIND_STRUCTURES, {
-        filter: object => object.hits < Math.round(object.hitsMax * 0.9)
+        filter: structure => structure.type !== STRUCTURE_CONTAINER && structure.hits < Math.round(structure.hitsMax * 0.9)
       });
       _cache.sort((a, b) => a.hits - b.hits);
 
@@ -127,7 +127,7 @@ var utils = {
     if (currentLiveTarget.hits < currentLiveTarget.hitsMax) {
       var targetID = creep.memory.currentTarget;
       liveTarget = Game.getObjectById(targetID);
-      if (creep.repair(liveTarget) == ERR_NOT_IN_RANGE) {
+      if (creep.repair(liveTarget) === ERR_NOT_IN_RANGE) {
         creep.moveTo(liveTarget);
       }
     } else if (currentLiveTarget.hits === currentLiveTarget.hitsMax) {

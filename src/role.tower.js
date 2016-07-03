@@ -4,7 +4,7 @@ utils = require('utils');
 
 var roleTower = {
 
-  _init: function(room) {
+  _init: function (room) {
     var myTowers = roleTower.towers(room);
     if (myTowers.length > 0) {
       for (var t in myTowers) {
@@ -14,7 +14,7 @@ var roleTower = {
     }
   },
 
-  towers: function(room) {
+  towers: function (room) {
     return room.find(FIND_STRUCTURES, {
       filter: (structure) => {
         return structure.structureType === STRUCTURE_TOWER;
@@ -22,15 +22,16 @@ var roleTower = {
     });
   },
 
-  towerControl: function(tower) {
+  towerControl: function (tower) {
     var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS),
       damagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
-          filter: (structure) => structure.structureType !== STRUCTURE_WALL &&
-          ((structure.structureType === STRUCTURE_RAMPART && structure.hits <100000) ||
-          (structure.structureType !== STRUCTURE_WALL && structure.structureType !== STRUCTURE_RAMPART &&
-            structure.hits < Math.round(structure.hitsMax * 0.8)))
-        });
-       //damagedStructure.sort((a, b) => (a.hits - b.hits));
+        filter: (structure) => structure.structureType !== STRUCTURE_WALL && structure.structureType !== STRUCTURE_CONTAINER &&
+          ((structure.structureType === STRUCTURE_RAMPART && structure.hits < 100000) ||
+            (structure.structureType !== STRUCTURE_WALL && structure.structureType !== STRUCTURE_RAMPART &&
+              (structure.structureType !== STRUCTURE_WALL && structure.structureType !== STRUCTURE_RAMPART &&
+                structure.hits < Math.round(structure.hitsMax * 0.8))))
+      });
+    //damagedStructure.sort((a, b) => (a.hits - b.hits));
     if (closestHostile) {
       tower.attack(closestHostile);
     }

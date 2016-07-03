@@ -14,7 +14,7 @@ var utils = require('utils');
 var roleHarvester = {
 
   /** @param {Creep} creep **/
-  run: function(creep) {
+  run: function (creep) {
     creep.memory.currentTask = 'harvest';
 
     utils.cFullCheck(creep);
@@ -28,32 +28,37 @@ var roleHarvester = {
         var spawners = creep.room.find(FIND_STRUCTURES, {
           filter: (structure) => {
             return (structure.structureType == STRUCTURE_EXTENSION ||
-              structure.structureType == STRUCTURE_SPAWN) &&
+                structure.structureType == STRUCTURE_SPAWN) &&
               structure.energy < structure.energyCapacity;
           }
         });
         var allTargets = creep.room.find(FIND_STRUCTURES, {
           filter: (structure) => {
             return (structure.structureType == STRUCTURE_STORAGE ||
-              structure.structureType == STRUCTURE_TOWER) &&
-              structure.energy < Math.round(structure.energyCapacity*0.95);
+                structure.structureType == STRUCTURE_TOWER) &&
+              structure.energy < Math.round(structure.energyCapacity * 0.95);
           }
         });
 
         if (spawners.length > 0) {
           creep.memory.currentTarget = creep.pos.findClosestByPath(spawners).id;
-        } else if (allTargets.length > 0) {
-          creep.memory.currentTarget = creep.pos.findClosestByPath(allTargets).id;
-        } else if (utils.containers('nFull', creep).length > 0) {
-          creep.memory.currentTarget = creep.pos.findClosestByRange(utils.containers('nFull', creep)).id;
-        } else if (_.sum(creep.room.storage.store) < creep.room.storage.storeCapacity) {
-          creep.memory.currentTarget = creep.room.storage.id;
+        } else {
+          if (Game.creeps, (creep) => creep.memory.role === 'mule') {
+            creep.drop(RESOURCE_ENERGY);
+          } else if (allTargets.length > 0) {
+            creep.memory.currentTarget = creep.pos.findClosestByPath(allTargets).id;
+            //} else if (utils.containers('nFull', creep).length > 0) {
+            //   creep.memory.currentTarget = creep.pos.findClosestByRange(utils.containers('nFull', creep)).id;
+          } else if (_.sum(creep.room.storage.store) < creep.room.storage.storeCapacity) {
+            creep.memory.currentTarget = creep.room.storage.id;
+          }
         }
+
 
       } else {
         target = Game.getObjectById(creep.memory.currentTarget);
         if ((target.structureType === STRUCTURE_STORAGE && _.sum(target.store) === target.storeCapacity) ||
-            (target.energy === target.energyCapacity)) {
+          (target.energy === target.energyCapacity)) {
           creep.memory.currentTarget = '';
         }
         if (creep.transfer(target, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {

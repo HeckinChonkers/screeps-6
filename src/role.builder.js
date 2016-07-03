@@ -14,8 +14,7 @@ var utils = require('utils');
 var roleBuilder = {
 
   /** @param {Creep} creep **/
-  run: function(creep) {
-
+  run: function (creep) {
 
     utils.cFullCheck(creep);
 
@@ -32,12 +31,16 @@ var roleBuilder = {
       }
     } else {
       creep.memory.currentTask = 'refill';
-      if (Boolean(creep.room.storage) && creep.room.storage.energy >= creep.carryCapacity) {
+      if (creep.room.storage && utils.containers('nEmpty').length === 0) {
+        if (creep.dismantle(utils.containers('empty')[0]) === ERR_NOT_IN_RANGE) {
+          creep.moveTo(utils.containers('empty')[0]);
+        }
+      } else if (Boolean(creep.room.storage) && creep.room.storage.energy >= creep.carryCapacity) {
         if (creep.room.storage.transfer(creep, 'energy') === ERR_NOT_IN_RANGE) {
           creep.moveTo(creep.room.storage);
         }
       } else if (utils.containers('nEmpty', creep).length > 0) {
-       if (utils.containers('nEmpty', creep)[0].transfer(creep, 'energy') === ERR_NOT_IN_RANGE) {
+        if (utils.containers('nEmpty', creep)[0].transfer(creep, 'energy') === ERR_NOT_IN_RANGE) {
           creep.moveTo(utils.containers('nEmpty', creep)[0]);
         }
       } else if (Game.spawns.Spawn1.energy > 200 &&

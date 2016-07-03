@@ -4,11 +4,11 @@ var roleHarvester = require('role.harvester'),
   roleUpgrader = require('role.upgrader'),
   roleBuilder = require('role.builder'),
   roleTower = require('role.tower'),
-  roleMule = require('role.mule');
+  roleMule = require('role.mule'),
   spawner = require('spawner'),
   utils = require('utils');
 
-module.exports.loop = function() {
+module.exports.loop = function () {
 
   var myRoom = Game.spawns.Spawn1.room;
 

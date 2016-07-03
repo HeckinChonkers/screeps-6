@@ -12,18 +12,20 @@ var conf = require('conf');
 var spawner = {
   eAvail: Game.spawns.Spawn1.room.energyAvailable,
   eCapa: Game.spawns.Spawn1.room.energyCapacityAvailable,
-  needCreeps: function(cRole) {
+  needCreeps: function (cRole) {
     function filterCreeps(cRole) {
       return _.filter(Game.creeps, (creep) => creep.memory.role === cRole);
     }
     return filterCreeps(cRole).length < conf.workers[cRole];
   },
-  controller: function() {
+  controller: function () {
 
     var mySpawn = Game.spawns.Spawn1;
 
     function spawnCreep(cRole) {
-      return mySpawn.createCreep(bodyChooser(cRole), getName(cRole), {role: cRole});
+      return mySpawn.createCreep(bodyChooser(cRole), getName(cRole), {
+        role: cRole
+      });
     }
 
     function getName(cRole) {
@@ -33,12 +35,12 @@ var spawner = {
 
     function bodyChooser(cRole) {
       var bodyType = Math.floor(spawner.eAvail / 100) * 100,
-          bodyConf;
-        if (cRole = 'mule') {
-          bodyConf = conf.creepBodies.mules;
-        } else {
-          bodyConf = conf.creepBodies.workers;
-        }
+        bodyConf;
+      if (cRole === 'mule') {
+        bodyConf = conf.creepBodies.mules;
+      } else {
+        bodyConf = conf.creepBodies.workers;
+      }
 
       if (Boolean(bodyConf[bodyType])) {
         console.log('Bodytype:' + bodyType + '|eAvail:' + spawner.eAvail);
@@ -58,7 +60,7 @@ var spawner = {
       }
     }
   },
-  status: function() {
+  status: function () {
     console.log('Energy ' + spawner.eAvail + '|' + spawner.eCapa);
     //console.log(spawner.harvesters().length());
   }
