@@ -88,7 +88,6 @@ var utils = {
         _shortList = _shortList.slice(0, 20);
       }
       creep.memory.toDoList = _shortList;
-      console.log('new toDoList created');
     }
     // createToDoList(creep);
 
@@ -130,11 +129,9 @@ var utils = {
         creep.moveTo(liveTarget);
       }
     } else if (currentLiveTarget.hits === currentLiveTarget.hitsMax) {
-      console.log('target repaired');
       removeCurrentTargetFromList(creep);
       getTargetFromList(creep);
     } else {
-      console.log('no target, getting new');
       getTargetFromList(creep);
     }
   },

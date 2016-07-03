@@ -8,7 +8,10 @@ var conf = {
     mule: 2,
     upgrader: 2,
     builder: 1,
-    harvester: 2
+    harvester: 2,
+  },
+  soldiers: {
+    grunt: 3
   },
 
   repairPrio: {

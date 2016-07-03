@@ -17,9 +17,7 @@ var roleBuilder = {
   run: function (creep) {
 
     utils.cFullCheck(creep);
-
-
-
+    
     if (creep.memory.fullCheck) {
       var targets = creep.room.find(FIND_CONSTRUCTION_SITES);
       if (targets.length) {
