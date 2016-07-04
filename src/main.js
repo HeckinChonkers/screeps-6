@@ -3,6 +3,7 @@
 var roleHarvester = require('role.harvester'),
   roleUpgrader = require('role.upgrader'),
   roleBuilder = require('role.builder'),
+  roleGrunt = require('role.grunt'),
   roleTower = require('role.tower'),
   roleMule = require('role.mule'),
   spawner = require('spawner'),
@@ -43,9 +44,11 @@ module.exports.loop = function () {
         roleBuilder.run(creep);
       }
     }
-
     if (creep.memory.role === 'mule') {
       roleMule.run(creep);
+    }
+    if (creep.memory.role === 'grunt') {
+      roleGrunt.run(creep);
     }
   }
 };
