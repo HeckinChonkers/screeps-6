@@ -47,7 +47,7 @@ var mule = {
 
     function getE(creep) {
       if (neConts.length > 0) {
-        var nearCont = creep.pos.findClosestByPath(neConts);
+        var nearCont = creep.pos.findClosestByRange(neConts);
         if (nearCont.transfer(creep, 'energy') === ERR_NOT_IN_RANGE) {
           creep.moveTo(nearCont);
         }

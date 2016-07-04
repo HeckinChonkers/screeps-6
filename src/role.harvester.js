@@ -62,10 +62,10 @@ var roleHarvester = {
             }
           });
           if (spawners.length > 0) {
-            creep.memory.currentTarget = creep.pos.findClosestByPath(spawners).id;
+            creep.memory.currentTarget = creep.pos.findClosestByRange(spawners).id;
           } else {
             if (allTargets.length > 0) {
-              creep.memory.currentTarget = creep.pos.findClosestByPath(allTargets).id;
+              creep.memory.currentTarget = creep.pos.findClosestByRange(allTargets).id;
             } else if (utils.containers('nFull', creep).length > 0) {
               creep.memory.currentTarget = creep.pos.findClosestByRange(utils.containers('nFull', creep)).id;
             } else if (_.sum(creep.room.storage.store) < creep.room.storage.storeCapacity) {

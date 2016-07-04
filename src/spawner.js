@@ -15,7 +15,7 @@ var spawner = {
     function filterCreeps(cRole) {
       return _.filter(Game.creeps, (creep) => creep.memory.role === cRole);
     }
-    return filterCreeps(cRole).length < conf.workers[cRole];
+    return filterCreeps(cRole).length < conf.workers[cRole] || filterCreeps(cRole).length < conf.soldiers[cRole] ;
   },
   controller: function () {
 

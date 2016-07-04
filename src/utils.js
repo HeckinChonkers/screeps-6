@@ -67,7 +67,7 @@ var utils = {
   // Reparatur mit Prioritaeten
   cRepair: function (creep) {
     function closest(targets) {
-      return creep.pos.findClosestByPath(targets);
+      return creep.pos.findClosestByRange(targets);
     }
 
     function createToDoList(creep) {
